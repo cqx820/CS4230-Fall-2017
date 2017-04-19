@@ -1,0 +1,49 @@
+1. The file MM1d.cpp is the Matrix Multiply with 1D row block layout. How to compile it:
+
+module load gcc opmenmpi
+
+mpicc -o MM1d MM1d.cpp
+
+To run it:
+
+mpiexec -n 2 ./MM1d
+
+(Takes only two 4x4 matrices)
+
+2. The file sequential.cpp is the sequential code of 1d row block matrx multiply. It only used to validate the MM1d code result. The way to compile it:
+
+g++ -o valid sequential.cpp
+
+and run with ./seq
+
+3. Both MM1d.cpp and sequential.cpp take two matrix files which should be named as "matrix" which is matrix B and "matrix2" which is matrix A. No new matrix file to be written out, the result will be shown only on command line.
+
+4. The file cannon.c is the implementation of Cannon's algorithm with OpenMPI. To compile the code:
+
+mpicc -o cannon cannon.c -std=c99
+
+and run with
+
+mpiexec -n 5 ./cannon 4 4 
+
+for random martix
+
+OR
+
+mpiexec -n 5 ./cannon -t 4 4       
+
+for comparaing with sequential matrix multiply (two matrix files input is needed for this option, file name is "matrix" and "matrix2"). 
+
+5. To compare and validate the cannon.c result, compile and run mmseq.c. To compile it:
+
+g++ -o seq mmseq.c
+
+and run with
+
+./seq 4 4
+
+This code needs two matrix files and these files must exactly same with the arguments which are row and column numbers. 
+
+(IMPORTANT NOTE: Since my implementation is using the sqrt(rank - 1) to make new communicator, thus the process number has to be a number that can be squre root after subtracting 1. Also, my code takes two arguements which are row number and colunm number. These two numbers have to be the same in order to create two double type valued random square matrices. This code also has no new file to be written out).
+  
+
